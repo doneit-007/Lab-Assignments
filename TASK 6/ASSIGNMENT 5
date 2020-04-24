@@ -1,0 +1,152 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct Node{
+ Node* right=NULL;
+ Node* left=NULL;
+ char data;
+
+};
+Node* root=NULL;
+void declare(Node* node,char c);
+void declare(Node* node,char c){
+    Node* ptr=(Node*)malloc(sizeof(Node));
+    if(node->data==c)
+    cout<<"Its is already present.Try another variable.!!"<<endl;
+    else if(node->data>c)
+    {if(node->left==NULL)
+        {ptr->data=c;
+        node->left=ptr;}
+     else
+     declare(node->left,c);
+    }
+    else if(node->data<c)
+    {if(node->right==NULL)
+        {ptr->data=c;
+        node->right=ptr;}
+     else
+     declare(node->right,c);  
+    }
+}  
+void displaypre(Node* node);
+void displaypre(Node* node)
+{  if(node!=NULL)
+   { cout<<node->data;
+     displaypre(node->left);
+     displaypre(node->right); 
+    }
+    
+}
+void displaypos(Node* node);
+void displaypos(Node* node)
+{
+    
+   if(node!=NULL)
+   { displaypos(node->left);
+     displaypos(node->right); 
+     cout<<node->data;
+   } 
+    
+    
+}
+void displayin(Node* node);
+void displayin(Node* node)
+{
+    
+   if(node!=NULL)
+   { displayin(node->left);
+     cout<<node->data;
+     displayin(node->right);
+   }
+    
+}
+Node* max(Node* node);
+Node* max(Node* node){
+   Node* temp=node; 
+   Node* ans;
+     while(temp!=NULL)
+    {   ans=temp;
+        temp=temp->right;
+    }
+    
+    return ans;
+    
+}
+
+  
+Node* del(Node* node,char c);
+Node* del(Node* node,char c)
+   { if(node==NULL)
+      return NULL;
+     else if(node->data>c)
+     node->left=del(node->left,c);
+     else if(node->data<c)
+     node->right=del(node->right,c);
+     else 
+     {
+         if(node->left==NULL&&node->right==NULL)
+          {delete node;
+          return NULL;}
+        else if(node->left==NULL)
+          {Node* temp=node->right;
+          delete node;
+          return temp;
+          }
+        else if(node->right==NULL)
+         {Node* temp=node->left;
+          delete node;
+          return temp;
+          }  
+    
+          Node* temp=max(node->left);
+            node->data=temp->data;
+            node->left=del(node->left,node->data);
+            
+        
+     }
+     return node;
+
+   }
+    
+    
+    
+
+
+  int main(){  
+    int n;
+    cin>>n;
+    while(n--)
+  {
+      string s;
+      cin>>s;
+      if(s=="INSERT")
+      {   char c;
+          cin>>c;
+          if(root==NULL)
+          {  root=(Node*)malloc(sizeof(Node));
+              root->data=c;}
+          else
+          declare(root,c);
+      }
+      else if(s=="DISPLAY")
+      {   cout<<"PREORDER: ";
+          displaypre(root);
+           cout<<endl;
+           cout<<"POSTORDER: ";
+           displaypos(root);
+           cout<<endl;
+           cout<<"INORDER: ";
+           displayin(root);
+           cout<<endl;
+ 
+      }
+      else if(s=="DEL")
+      {char c;
+          cin>>c;
+          root=del(root,c);
+      }
+      
+  }
+    
+    
+    return 0;
+}
